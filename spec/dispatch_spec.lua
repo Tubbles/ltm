@@ -1,4 +1,11 @@
-local dispatch = require("lib.dispatch")
+-- Dispatch's run() calls into convert/eval/seq, and those reference
+-- util at call time. Eagerly require all sibling modules so their
+-- globals exist before any dispatch.run() invocation.
+require("util")
+require("seq")
+require("convert")
+require("eval")
+local dispatch = require("dispatch")
 
 describe("dispatch.parse: missing or unknown op", function()
     it("empty args returns missing-op error", function()

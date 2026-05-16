@@ -1,4 +1,4 @@
-local util = require("lib.util")
+local util = require("util")
 
 describe("util.flatten", function()
     it("copies keys from source into target", function()

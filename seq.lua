@@ -1,4 +1,5 @@
-local util = require("lib.util")
+-- seq: arithmetic sequence generator with sign-aware padding.
+-- See util.lua header for the dual-load design.
 
 local M = {}
 
@@ -16,6 +17,8 @@ function M.generate(first, step, count, flag)
         return raw
     end
 
+    -- `util` resolves at call time: in micro it's ltm.util (set by
+    -- util.lua's `util = M`); in busted it's _G.util.
     local width = util.pad_width(raw)
     local padder = (flag == "z") and util.zero_pad or util.space_pad
     local padded = {}
@@ -25,4 +28,5 @@ function M.generate(first, step, count, flag)
     return padded
 end
 
+seq = M
 return M

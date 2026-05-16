@@ -1,3 +1,19 @@
+-- util: pure helpers reused by seq, convert, eval, dispatch.
+--
+-- This file is loaded two different ways:
+--   1. By micro at plugin load time, where micro prepends
+--      `module("ltm", package.seeall)` so the assignment to `util`
+--      at the bottom lands on the ltm table.
+--   2. By busted's `require("util")` for unit tests, where the
+--      assignment becomes a global in _G and the `return M` gives
+--      the spec a local binding via `local util = require("util")`.
+--
+-- The trick that makes one file work in both: don't `require` other
+-- ltm modules at file load time. Micro's plugin loader has no
+-- package.path entry that would find siblings. All cross-module
+-- access happens inside function bodies (call time), after every
+-- sibling has had a chance to set its global.
+
 local M = {}
 
 function M.flatten(into, from)
@@ -62,4 +78,5 @@ function M.space_pad(s, width)
     return string.rep(" ", pad) .. s
 end
 
+util = M
 return M

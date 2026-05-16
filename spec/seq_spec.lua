@@ -1,4 +1,5 @@
-local seq = require("lib.seq")
+require("util")  -- sets _G.util; seq.generate references util at call time
+local seq = require("seq")
 
 describe("seq.generate", function()
     it("ascending integer sequence with no padding", function()

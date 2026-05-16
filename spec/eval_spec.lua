@@ -1,4 +1,5 @@
-local eval = require("lib.eval")
+require("util")  -- sets _G.util; eval references util at call time
+local eval = require("eval")
 
 describe("eval: pure Lua arithmetic", function()
     it("integer addition", function()
@@ -136,7 +137,7 @@ end)
 
 describe("eval: collision guard via util.flatten", function()
     it("flatten itself raises on a second flatten with overlapping keys", function()
-        local util = require("lib.util")
+        local util = require("util")
         local env = {}
         util.flatten(env, {abs = "first"})
         assert.has_error(function()

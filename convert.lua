@@ -1,4 +1,5 @@
-local util = require("lib.util")
+-- convert: 12 base-conversion shortcuts plus the generic apply()
+-- helper. See util.lua header for the dual-load design.
 
 local M = {}
 
@@ -51,6 +52,7 @@ function M.apply(from_base, to_base, sel)
         stripped = stripped:sub(2)
     end
 
+    -- `util` resolves at call time.
     stripped = util.strip_prefix(stripped, from_base)
 
     if not stripped:match(DIGIT_PATTERN[from_base]) then
@@ -84,4 +86,5 @@ function M.bin2dec(sel) return M.apply( 2, 10, sel) end
 function M.bin2hex(sel) return M.apply( 2, 16, sel) end
 function M.bin2oct(sel) return M.apply( 2,  8, sel) end
 
+convert = M
 return M

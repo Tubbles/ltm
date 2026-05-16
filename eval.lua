@@ -1,9 +1,12 @@
-local util = require("lib.util")
+-- eval: pure Lua expression evaluation per cursor selection. See
+-- util.lua header for the dual-load design.
 
 local M = {}
 
 local function build_env()
     local env = {}
+    -- `util` resolves at call time. In micro, ltm.util via the
+    -- module() env. In busted, _G.util set by util.lua's load.
     util.flatten(env, math)
     setmetatable(env, {__index = _G})
     return env
@@ -26,4 +29,5 @@ function M.eval(expr)
     return tostring(result), nil
 end
 
+eval = M
 return M

@@ -1,4 +1,5 @@
-local convert = require("lib.convert")
+require("util")  -- sets _G.util; convert.apply references util at call time
+local convert = require("convert")
 
 describe("convert: basic conversions", function()
     it("dec2hex small values", function()

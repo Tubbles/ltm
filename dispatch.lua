@@ -1,6 +1,7 @@
-local convert = require("lib.convert")
-local eval    = require("lib.eval")
-local seq     = require("lib.seq")
+-- dispatch: argument parser, op runner, and tab completer. See
+-- util.lua header for the dual-load design. Cross-module references
+-- to `convert`, `eval`, `seq`, `util` happen inside function bodies
+-- and resolve at call time.
 
 local M = {}
 
@@ -147,4 +148,5 @@ function M.complete(line, cursor_x)
     return completions, suggestions
 end
 
+dispatch = M
 return M
