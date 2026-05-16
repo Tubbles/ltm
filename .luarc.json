@@ -1,0 +1,13 @@
+{
+  "runtime.version": "Lua 5.1",
+  "workspace.library": [
+    "~/dev/micro/runtime/meta/library"
+  ],
+  "workspace.checkThirdParty": false,
+  "diagnostics.globals": [
+    "import"
+  ],
+  "diagnostics.disable": [
+    "lowercase-global"
+  ]
+}

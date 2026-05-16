@@ -1,0 +1,16 @@
+[
+  {
+    "Name": "ltm",
+    "Description": "Lua text transforms over multi-cursor selections",
+    "Tags": ["utility", "text", "multi-cursor"],
+    "Versions": [
+      {
+        "Version": "0.1.0",
+        "Url": "",
+        "Require": {
+          "micro": ">=2.0.0"
+        }
+      }
+    ]
+  }
+]
