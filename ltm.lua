@@ -12,8 +12,9 @@ VERSION = "0.1.0"
 -- command or presses Tab), every sibling has loaded and set its
 -- module table on the shared ltm namespace.
 
-local micro    = import("micro")
-local config   = import("micro/config")
+local micro      = import("micro")
+local config     = import("micro/config")
+local micro_util = import("micro/util")
 
 local function apply_edits(bp, cursors, has_sel, outputs)
     -- Build edit records before applying any of them. The cursor
@@ -73,9 +74,10 @@ function run(bp, args)
         if cursor:HasSelection() then
             local sel_start = -cursor.CurSelection[1]
             local sel_stop  = -cursor.CurSelection[2]
-            -- Substr is exposed via the LineArray embed on Buffer
-            -- and returns []byte. Lua sees it as a string.
-            inputs[index] = tostring(bp.Buf:Substr(sel_start, sel_stop))
+            -- Substr returns Go []byte (userdata in Lua). micro/util's
+            -- String() converts it to a real Lua string; tostring()
+            -- would yield "userdata: 0x...".
+            inputs[index] = micro_util.String(bp.Buf:Substr(sel_start, sel_stop))
             has_sel[index] = true
         else
             inputs[index] = ""
