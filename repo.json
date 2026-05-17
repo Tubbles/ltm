@@ -6,7 +6,7 @@
     "Versions": [
       {
         "Version": "0.1.0",
-        "Url": "https://github.com/Tubbles/ltm",
+        "Url": "https://github.com/Tubbles/ltm/archive/refs/tags/v0.1.0.tar.gz",
         "Require": {
           "micro": ">=2.0.0"
         }
