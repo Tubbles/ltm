@@ -70,4 +70,4 @@ the editor.
 
 ## License
 
-AGPL-3.0-or-later. See `LICENSE`.
+AGPL-3.0-only. See `LICENSE`.
