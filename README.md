@@ -48,8 +48,14 @@ positional arg.
 
 ## Install
 
-Drop the repo into `~/.config/micro/plug/ltm/`. Micro picks it up at
-next launch.
+Clone into micro's plugin directory:
+
+```
+git clone https://github.com/Tubbles/ltm.git ~/.config/micro/plug/ltm
+```
+
+Micro picks it up at next launch. See `> help ltm` (from micro's
+command prompt) for the full reference.
 
 ## Tests
 
@@ -57,5 +63,11 @@ next launch.
 busted spec/
 ```
 
-Pure modules under `lib/` are covered. The micro adapter
-(`ltm.lua`) is verified by manual smoke in the editor.
+The pure modules (`util`, `seq`, `convert`, `eval`, `dispatch`) all
+have spec coverage. The micro adapter (`ltm.lua`) is the only file
+that touches micro's plugin API and is verified by manual smoke in
+the editor.
+
+## License
+
+AGPL-3.0-or-later. See `LICENSE`.
