@@ -5,6 +5,7 @@ require("util")
 require("seq")
 require("convert")
 require("eval")
+require("case")
 local dispatch = require("dispatch")
 
 describe("dispatch.parse: missing or unknown op", function()
@@ -51,6 +52,15 @@ describe("dispatch.parse: zero-arg ops", function()
         end
     end)
 
+    it("upper and lower with no args are valid", function()
+        for _, name in ipairs({"upper", "lower"}) do
+            local op, opargs, err = dispatch.parse({name})
+            assert.are.equal(name, op)
+            assert.are.same({}, opargs)
+            assert.is_nil(err)
+        end
+    end)
+
     it("eval with extra args is rejected", function()
         local op, _, err = dispatch.parse({"eval", "extra"})
         assert.is_nil(op)
@@ -59,6 +69,12 @@ describe("dispatch.parse: zero-arg ops", function()
 
     it("dec2hex with extra args is rejected", function()
         local op, _, err = dispatch.parse({"dec2hex", "extra"})
+        assert.is_nil(op)
+        assert.is_truthy(err:find("takes no args"))
+    end)
+
+    it("upper with extra args is rejected", function()
+        local op, _, err = dispatch.parse({"upper", "extra"})
         assert.is_nil(op)
         assert.is_truthy(err:find("takes no args"))
     end)
@@ -204,10 +220,32 @@ describe("dispatch.run: convert ops", function()
     end)
 end)
 
+describe("dispatch.run: case ops", function()
+    it("upper walks inputs", function()
+        local outputs = dispatch.run("upper", {},
+            {"hello", "World", "a1-b2"}, 3)
+        assert.are.same({"HELLO", "WORLD", "A1-B2"}, outputs)
+    end)
+
+    it("lower walks inputs", function()
+        local outputs = dispatch.run("lower", {},
+            {"HELLO", "World", "A1-B2"}, 3)
+        assert.are.same({"hello", "world", "a1-b2"}, outputs)
+    end)
+
+    it("empty input is skipped", function()
+        local outputs = dispatch.run("upper", {},
+            {"hi", "", "bye"}, 3)
+        assert.are.equal("HI", outputs[1])
+        assert.is_nil(outputs[2])
+        assert.are.equal("BYE", outputs[3])
+    end)
+end)
+
 describe("dispatch.complete: op-name position", function()
-    it("empty prefix suggests all 14 op names", function()
+    it("empty prefix suggests all 16 op names", function()
         local _, suggestions = dispatch.complete("ltm ", 4)
-        assert.are.equal(14, #suggestions)
+        assert.are.equal(16, #suggestions)
     end)
 
     it("partial prefix filters", function()
@@ -223,6 +261,16 @@ describe("dispatch.complete: op-name position", function()
     it("dec prefix narrows to the three dec2 ops", function()
         local _, suggestions = dispatch.complete("ltm dec", 7)
         assert.are.same({"dec2bin", "dec2hex", "dec2oct"}, suggestions)
+    end)
+
+    it("u prefix narrows to upper", function()
+        local _, suggestions = dispatch.complete("ltm u", 5)
+        assert.are.same({"upper"}, suggestions)
+    end)
+
+    it("lo prefix narrows to lower", function()
+        local _, suggestions = dispatch.complete("ltm lo", 6)
+        assert.are.same({"lower"}, suggestions)
     end)
 
     it("no matches when prefix is gibberish", function()

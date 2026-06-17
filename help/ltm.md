@@ -8,6 +8,7 @@ through the command prompt (`Ctrl-E`).
 ```
 > ltm eval
 > ltm seq FIRST STEP [-z | -p]
+> ltm upper | ltm lower
 > ltm dec2hex | ltm dec2oct | ltm dec2bin
 > ltm hex2dec | ltm hex2oct | ltm hex2bin
 > ltm oct2dec | ltm oct2hex | ltm oct2bin
@@ -28,8 +29,8 @@ For each cursor:
 
 - A selection is the input. Its result replaces the selection.
 - No selection means empty input. For `seq`, a value is inserted at
-  the cursor position. For `eval` and the 12 base conversions, the
-  cursor is skipped silently.
+  the cursor position. For `eval`, `upper`, `lower`, and the 12 base
+  conversions, the cursor is skipped silently.
 
 ## ltm eval
 
@@ -90,6 +91,18 @@ Examples:
 3 cursors, > ltm seq 0 0.5        -> 0, 0.5, 1
 11 cursors, > ltm seq 0 1 -z      -> 00, 01, ..., 09, 10
 11 cursors, > ltm seq -5 1 -z     -> -5, -4, ..., -1, 00, 01, ..., 05
+```
+
+## ltm upper / lower
+
+Change the letter case of each cursor's selection. `upper` applies
+`string.upper`, `lower` applies `string.lower`. The whole selection
+is transformed (not line-split); non-letters pass through unchanged.
+Empty selections are skipped.
+
+```
+> ltm upper on "Hello, World"   -> HELLO, WORLD
+> ltm lower on "Hello, World"   -> hello, world
 ```
 
 ## ltm dec2hex (and 11 friends)

@@ -1,7 +1,7 @@
 -- dispatch: argument parser, op runner, and tab completer. See
 -- util.lua header for the dual-load design. Cross-module references
--- to `convert`, `eval`, `seq`, `util` happen inside function bodies
--- and resolve at call time.
+-- to `case`, `convert`, `eval`, `seq`, `util` happen inside function
+-- bodies and resolve at call time.
 
 local M = {}
 
@@ -12,18 +12,24 @@ local CONVERT_OPS = {
     bin2dec = true, bin2hex = true, bin2oct = true,
 }
 
+local CASE_OPS = {
+    upper = true, lower = true,
+}
+
 local OP_NAMES_SORTED = {
     "bin2dec", "bin2hex", "bin2oct",
     "dec2bin", "dec2hex", "dec2oct",
     "eval",
     "hex2bin", "hex2dec", "hex2oct",
+    "lower",
     "oct2bin", "oct2dec", "oct2hex",
     "seq",
+    "upper",
 }
 
 local function known_op(name)
     if name == "eval" or name == "seq" then return true end
-    return CONVERT_OPS[name] == true
+    return CONVERT_OPS[name] == true or CASE_OPS[name] == true
 end
 
 function M.parse(args)
@@ -36,7 +42,7 @@ function M.parse(args)
         return nil, nil, "unknown op: " .. tostring(op)
     end
 
-    if op == "eval" or CONVERT_OPS[op] then
+    if op == "eval" or CONVERT_OPS[op] or CASE_OPS[op] then
         if #args > 1 then
             return nil, nil, op .. " takes no args"
         end
@@ -100,6 +106,16 @@ function M.run(op, opargs, inputs, cursor_count)
         local outputs = {}
         for index = 1, cursor_count do
             outputs[index] = converter(inputs[index] or "")
+        end
+        return outputs, nil
+    end
+
+    if CASE_OPS[op] then
+        -- `case` resolves at call time.
+        local transform = case[op]
+        local outputs = {}
+        for index = 1, cursor_count do
+            outputs[index] = transform(inputs[index] or "")
         end
         return outputs, nil
     end

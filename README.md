@@ -6,12 +6,14 @@ to invoking a shell-based tool once per cursor.
 
 ## Ops
 
-One micro command `ltm` with 14 sub-ops dispatched on the first
+One micro command `ltm` with 16 sub-ops dispatched on the first
 positional arg.
 
 ```
 > ltm eval                       evaluate each cursor's selection as a Lua expression
 > ltm seq FIRST STEP [-z | -p]   generate FIRST, FIRST+STEP, ... one per cursor
+> ltm upper                      uppercase each selection (string.upper)
+> ltm lower                      lowercase each selection (string.lower)
 > ltm dec2hex                    convert each selection from decimal to hex
 > ltm dec2oct
 > ltm dec2bin
@@ -40,6 +42,8 @@ positional arg.
 - `seq` always emits one value per cursor. `-z` zero-pads (sign
   aware), `-p` space-pads. Padding width is computed from the full
   generated sequence.
+- `upper` and `lower` apply `string.upper`/`string.lower` to each
+  selection. Empty selections are skipped.
 - The 12 base shortcuts treat the selection as a single value. Empty
   selections are skipped. Selections that aren't valid in the
   from-base are replaced with the literal string `"nil"`. The
